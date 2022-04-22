@@ -1,0 +1,36 @@
+html,
+body{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    
+}
+
+h1{
+    color: white;
+}
+
+canvas, #scene-container{
+    position: fixed;
+    left: 0px;
+    top : 0px;
+    margin:0px;
+    z-index: 100;
+
+}
+
+.section{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media  (orientation:portrait){
+
+    #scene-container{display: none;}
+    #rotateGuide {display: block;}
+
+
+}
