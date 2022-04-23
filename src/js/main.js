@@ -120,132 +120,39 @@ function main(){
      const textureLoader = new THREE.TextureLoader();    
 
 
+     
 
     /**
-     * Ground
-     */
-    const groundGeometry = new THREE.PlaneGeometry(2000, 4000);
-
-    // const groundTexture = textureLoader.load('static/images/groundTexture1.jpg');
-    const groundTexture = textureLoader.load('static/images/grassTexture.jpg');
-    groundTexture.wrapS = THREE.RepeatWrapping;
-    groundTexture.wrapT = THREE.RepeatWrapping;
-    groundTexture.magFilter = THREE.NearestFilter;
-    groundTexture.repeat = new THREE.Vector2(40, 40);
-    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x111111, map: groundTexture});
-    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-
-    ground.rotateX( - Math.PI / 2);
-
-    // ground.castShadow = true;
-    ground.receiveShadow = true;
-
-    scene.add(ground);
-
-
-
-    /**
-     * Image
+     * Particles
      */
 
-    function createImage(loader, url, position){
-            
-        const planeGeometry = new THREE.BoxBufferGeometry(imageWidth, imageWidth, 1);
+     const particlesCount = 1000;
+     const particlesPositions = new Float32Array(particlesCount * 3);
+ 
+     for(let i = 0; i < particlesCount; i++){
+         
+         particlesPositions[i * 3] = (Math.random() - 0.5) * 10000;
+         particlesPositions[i * 3 + 1] = (Math.random()) * 10000 ;
+         particlesPositions[i *3 + 2] = (Math.random() - 0.5) * 10000 ;
+     }
+ 
+ 
+     const particlesAttribute = new THREE.BufferAttribute(particlesPositions, 3);
+ 
+     const particlesGeometry = new THREE.BufferGeometry();
+     particlesGeometry.setAttribute('position', particlesAttribute);
+ 
 
-        const planeTexture = loader.load(url);
-
-        const planeMaterial = new THREE.MeshStandardMaterial({ map: planeTexture});
-
-        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-
-        plane.position.set(position.x, position.y, position.z);
-        plane.castShadow = true;
-
-        return plane;
-    }
-
-    
-    
-    for(let i = 1; i <= imagesCount; i++){
-        //const clonedImage =image.clone();
-
-        const url = `static/images/_${1999 + i}.jpg`
-        const image = createImage(textureLoader, url, new THREE.Vector3(0, imageWidth / 2, 0));
-    
-
-        const z = i / imagesCount ;
-
-        image.position.x = Math.sin(z *  2 * Math.PI) * x_amplitude
-        image.position.z = z * imagesCount * z_interval + images_z_offset
-       
-
-        /**
-         * each Image animation
-         */
-
-        let timeline = gsap.timeline({ paused: true });
-
-        if(i === 1){
-            
-            
-            timeline.to(camera.rotation, 
-                {
-                    x:  -Math.PI / 20,  
-                    ease : "slow.inOut", 
-                    duration: 2 
-                })
-
-            animationsArray.push(timeline);            
-        }
-            
-        timeline.to(pointLight.position, 
-                    { 
-                        x: image.position.x - 40,
-                        y: 30, 
-                        z: image.position.z + cameraToImage_z_distance,
-                        ease : "sine.inOut",
-                        duration: 2 
-                    }, 0);
-        timeline.to(camera.position,
-                        {
-                            x: image.position.x - yearTextWidth, 
-                            y: 15, 
-                            z : image.position.z + cameraToImage_z_distance, 
-                            ease : "sine.inOut", 
-                            duration: 2 
-                        }, 0)
-        timeline.to(image.rotation, {y: -Math.PI / 8, duration: 2 }, 0.5)
-
-        animationsArray.push(timeline);
-
-
-        /**
-         * Back to the start animation
-         */
-
-        if(i === imagesCount){
-            let lastTimeline = gsap.timeline({ paused: true }); //create the timeline
-            lastTimeline.to(camera.position,
-                            {
-                                x: cameraFirstPosition.x, 
-                                y: cameraFirstPosition.y, 
-                                z : cameraFirstPosition.z, 
-                                ease : "sine.inOut", duration: 2 
-                            })
-
-            lastTimeline.to(camera.rotation, 
-                            {
-                                x: cameraFirstRotation_x,
-                                y: 0, 
-                                z: 0,
-                                duration: 2 
-                            }, 1);
-
-            animationsArray.push(lastTimeline);
-        }
-
-        scene.add(image); 
-    }
+     const particleTexture = textureLoader.load('static/images/RM_Logo1.png');
+     const particlesMaterial = new THREE.PointsMaterial({map: particleTexture  });
+     particlesMaterial.alphaTest = 0.001
+     particlesMaterial.size = 100;
+     
+ 
+     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+ 
+     particles.position.y = 1000;
+     scene.add(particles);
 
 
     /**
@@ -360,36 +267,131 @@ function main(){
 
 
     /**
-     * Particles
+     * Ground
+     */
+    const groundGeometry = new THREE.PlaneGeometry(2000, 4000);
+
+    // const groundTexture = textureLoader.load('static/images/groundTexture1.jpg');
+    const groundTexture = textureLoader.load('static/images/grassTexture.jpg');
+    groundTexture.wrapS = THREE.RepeatWrapping;
+    groundTexture.wrapT = THREE.RepeatWrapping;
+    groundTexture.magFilter = THREE.NearestFilter;
+    groundTexture.repeat = new THREE.Vector2(40, 40);
+    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x111111, map: groundTexture});
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+
+    ground.rotateX( - Math.PI / 2);
+
+    // ground.castShadow = true;
+    ground.receiveShadow = true;
+
+    scene.add(ground);
+
+
+
+    /**
+     * Image
      */
 
-     const particlesCount = 1000;
-     const particlesPositions = new Float32Array(particlesCount * 3);
- 
-     for(let i = 0; i < particlesCount; i++){
-         
-         particlesPositions[i * 3] = (Math.random() - 0.5) * 10000;
-         particlesPositions[i * 3 + 1] = (Math.random()) * 10000 ;
-         particlesPositions[i *3 + 2] = (Math.random() - 0.5) * 10000 ;
-     }
- 
- 
-     const particlesAttribute = new THREE.BufferAttribute(particlesPositions, 3);
- 
-     const particlesGeometry = new THREE.BufferGeometry();
-     particlesGeometry.setAttribute('position', particlesAttribute);
- 
+    function createImage(loader, url, position){
+            
+        const planeGeometry = new THREE.BoxBufferGeometry(imageWidth, imageWidth, 1);
 
-     const particleTexture = textureLoader.load('static/images/RM_Logo1.png');
-     const particlesMaterial = new THREE.PointsMaterial({map: particleTexture  });
-     particlesMaterial.alphaTest = 0.001
-     particlesMaterial.size = 100;
-     
- 
-     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
- 
-     particles.position.y = 1000;
-     scene.add(particles);
+        const planeTexture = loader.load(url);
+
+        const planeMaterial = new THREE.MeshStandardMaterial({ map: planeTexture});
+
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+        plane.position.set(position.x, position.y, position.z);
+        plane.castShadow = true;
+
+        return plane;
+    }
+
+    
+    
+    for(let i = 1; i <= imagesCount; i++){
+        //const clonedImage =image.clone();
+
+        const url = `static/images/${1999 + i}.jpg`
+        const image = createImage(textureLoader, url, new THREE.Vector3(0, imageWidth / 2, 0));
+    
+
+        const z = i / imagesCount ;
+
+        image.position.x = Math.sin(z *  2 * Math.PI) * x_amplitude
+        image.position.z = z * imagesCount * z_interval + images_z_offset
+       
+
+        /**
+         * each Image animation
+         */
+
+        let timeline = gsap.timeline({ paused: true });
+
+        if(i === 1){
+            
+            
+            timeline.to(camera.rotation, 
+                {
+                    x:  -Math.PI / 20,  
+                    ease : "slow.inOut", 
+                    duration: 2 
+                })
+
+            animationsArray.push(timeline);            
+        }
+            
+        timeline.to(pointLight.position, 
+                    { 
+                        x: image.position.x - 40,
+                        y: 30, 
+                        z: image.position.z + cameraToImage_z_distance,
+                        ease : "sine.inOut",
+                        duration: 2 
+                    }, 0);
+        timeline.to(camera.position,
+                        {
+                            x: image.position.x - yearTextWidth, 
+                            y: 15, 
+                            z : image.position.z + cameraToImage_z_distance, 
+                            ease : "sine.inOut", 
+                            duration: 2 
+                        }, 0)
+        timeline.to(image.rotation, {y: -Math.PI / 8, duration: 2 }, 0.5)
+
+        animationsArray.push(timeline);
+
+
+        /**
+         * Back to the start animation
+         */
+
+        if(i === imagesCount){
+            let lastTimeline = gsap.timeline({ paused: true }); //create the timeline
+            lastTimeline.to(camera.position,
+                            {
+                                x: cameraFirstPosition.x, 
+                                y: cameraFirstPosition.y, 
+                                z : cameraFirstPosition.z, 
+                                ease : "sine.inOut", duration: 2 
+                            })
+
+            lastTimeline.to(camera.rotation, 
+                            {
+                                x: cameraFirstRotation_x,
+                                y: 0, 
+                                z: 0,
+                                duration: 2 
+                            }, 1);
+
+            animationsArray.push(lastTimeline);
+        }
+
+        scene.add(image); 
+    }
+
  
  
      /**
