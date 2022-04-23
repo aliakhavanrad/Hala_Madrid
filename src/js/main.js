@@ -119,6 +119,40 @@ function main(){
 
      const textureLoader = new THREE.TextureLoader();    
 
+     
+    /**
+     * Particles
+     */
+
+     const particlesCount = 1000;
+     const particlesPositions = new Float32Array(particlesCount * 3);
+ 
+     for(let i = 0; i < particlesCount; i++){
+         
+         particlesPositions[i * 3] = (Math.random() - 0.5) * 10000;
+         particlesPositions[i * 3 + 1] = (Math.random()) * 10000 ;
+         particlesPositions[i *3 + 2] = (Math.random() - 0.5) * 10000 ;
+     }
+ 
+ 
+     const particlesAttribute = new THREE.BufferAttribute(particlesPositions, 3);
+ 
+     const particlesGeometry = new THREE.BufferGeometry();
+     particlesGeometry.setAttribute('position', particlesAttribute);
+ 
+
+     const particleTexture = textureLoader.load('static/images/RM_Logo1.png');
+     const particlesMaterial = new THREE.PointsMaterial({map: particleTexture  });
+     particlesMaterial.alphaTest = 0.001
+     particlesMaterial.size = 100;
+     
+ 
+     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+ 
+     particles.position.y = 1000;
+     scene.add(particles);
+ 
+ 
 
 
     /**
@@ -359,39 +393,6 @@ function main(){
     
 
 
-    /**
-     * Particles
-     */
-
-     const particlesCount = 1000;
-     const particlesPositions = new Float32Array(particlesCount * 3);
- 
-     for(let i = 0; i < particlesCount; i++){
-         
-         particlesPositions[i * 3] = (Math.random() - 0.5) * 10000;
-         particlesPositions[i * 3 + 1] = (Math.random()) * 10000 ;
-         particlesPositions[i *3 + 2] = (Math.random() - 0.5) * 10000 ;
-     }
- 
- 
-     const particlesAttribute = new THREE.BufferAttribute(particlesPositions, 3);
- 
-     const particlesGeometry = new THREE.BufferGeometry();
-     particlesGeometry.setAttribute('position', particlesAttribute);
- 
-
-     const particleTexture = textureLoader.load('static/images/RM_Logo1.png');
-     const particlesMaterial = new THREE.PointsMaterial({map: particleTexture  });
-     particlesMaterial.alphaTest = 0.001
-     particlesMaterial.size = 100;
-     
- 
-     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
- 
-     particles.position.y = 1000;
-     scene.add(particles);
- 
- 
      /**
       * Event Handlers
       */
