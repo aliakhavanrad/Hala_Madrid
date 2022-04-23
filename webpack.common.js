@@ -1,4 +1,3 @@
-const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -31,15 +30,6 @@ module.exports = {
         { from: path.resolve(__dirname, './src/static') ,to: './static'}
       ]
     })
-  ],
-  devServer:{
-    static:{
-      directory:path.join(__dirname, 'dist')
-    },
-    compress:true,
-    port: 6871,
-    open: true,
-    hot: true
-  },
+  ]
 
 };

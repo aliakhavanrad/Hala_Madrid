@@ -67,8 +67,65 @@ function main(){
                         cameraFirstPosition.y,
                         cameraFirstPosition.z);
 
-    //camera.lookAt(0, 1000, 0)   
     camera.rotation.x = cameraFirstRotation_x
+
+
+    /**
+     * Overlay
+     */
+    const overlayGeometry = new THREE.PlaneBufferGeometry(2, 2, 1, 1);
+    const overlayMaterial = new THREE.ShaderMaterial({
+        transparent: true,
+        uniforms:
+        {
+            uAlpha: { value: 1 } 
+        },
+        vertexShader:`
+        void main()
+        {
+            gl_Position = vec4(position, 1.0);
+        }
+        `,
+        fragmentShader:`
+        uniform float uAlpha;
+
+        void main()
+        {
+            gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
+        }`
+    });
+
+    const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial)
+    scene.add(overlay);
+
+
+     /**
+     * Loaders
+     */
+
+    const loadingBar = document.querySelector('.loading-bar');
+
+    const loadingManager = new THREE.LoadingManager(
+        // Loaded
+        () =>
+        {
+            gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 })
+            loadingBar.style.transform = '';
+            loadingBar.classList.add('ended');
+        },
+
+        // Progress
+        (itemUrl, itemsLoaded, itemsTotal) =>
+        {
+            const progressRatio = itemsLoaded / itemsTotal;
+
+            loadingBar.style.transform = `scaleX(${progressRatio})`
+        }
+    );
+    
+    const textureLoader = new THREE.TextureLoader(loadingManager);    
+    const fontLoader = new FontLoader(loadingManager);
+
 
     /**
      * Axis Helper
@@ -113,12 +170,7 @@ function main(){
     directionalLight.castShadow = true;
     scene.add(directionalLight);
 
-    /**
-     * Texture Loader
-     */
-
-     const textureLoader = new THREE.TextureLoader();    
-
+   
 
      
 
@@ -161,7 +213,6 @@ function main(){
 
      let startText;
     let guideText;
-     const fontLoader = new FontLoader();
 
      fontLoader.load( 'static/fonts/gentilis_bold.typeface.json', function ( font ) {
      
