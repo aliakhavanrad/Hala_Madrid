@@ -3,6 +3,7 @@ body{
     margin: 0px;
     padding: 0px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: black;
     
 }
 
@@ -10,7 +11,7 @@ h1{
     color: white;
 }
 
-canvas, #scene-container{
+canvas,#main-container, #scene-container{
     position: fixed;
     left: 0px;
     top : 0px;
@@ -18,20 +19,12 @@ canvas, #scene-container{
 
 }
 
-.section{
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .loading-bar{
     position: absolute;
-    top: 50%;
+    top: 0%;
     width: 100%;
-    height: 5px;
-    background: white;
+    height: 10px;
+    background: #00609a;
     transform: scaleX(0);
     transform-origin: top left;
     /* transition: transform 0.5s; */
@@ -44,7 +37,6 @@ canvas, #scene-container{
 }
 
 #rotateGuide{
-    z-index: 100;
     position: fixed;
     width:100%;
     top: 0px;
@@ -55,8 +47,8 @@ canvas, #scene-container{
 
 @media  (orientation:portrait){
 
-    #scene-container{display: none;}
-    
+    #scene-container { display: none; }
+
     #rotateGuide {display: block;}
 
 
