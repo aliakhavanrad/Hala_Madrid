@@ -112,6 +112,26 @@ function main(){
             gsap.to(overlayMaterial.uniforms.uAlpha, { value: 0, duration: 3 })
             loadingBar.style.transform = '';
             loadingBar.classList.add('ended');
+
+            
+            /**
+             * Click
+             */
+
+            sceneContainer.addEventListener('click', () => {
+
+                if(!audio){ 
+                    audio  = new Audio('static/sounds/Hala Madrid.mp3');
+                    audio.onended = (event)=>{ audio.play() };
+                    audio.play();
+                }
+
+                moveForward()
+            });
+
+            setInterval(() => {
+                moveForward();
+            }, 10000);
         },
 
         // Progress
@@ -484,17 +504,8 @@ function main(){
     }
 
 
-     /**
-      * Click
-      */
 
-      sceneContainer.addEventListener('click', () => {
-
-        if(!audio){ 
-            audio  = new Audio('static/sounds/Hala Madrid.mp3');
-            audio.onended = (event)=>{ audio.play() };
-            audio.play();
-        }
+    function moveForward(){
 
         var activeAnim = animationsArray.filter(x=>x.isActive());
 
@@ -510,11 +521,7 @@ function main(){
         if(animationIndex == imagesCount + 2){
             animationIndex = 0;
         }
-
-        
-
-
-     });
+     }
 
 
 
